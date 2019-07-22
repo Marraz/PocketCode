@@ -1,0 +1,4 @@
+# exclude everything except directory foo/bar
+/VSExtension/.vs
+/VSExtension/PocketCode/bin
+/VSExtension/PocketCode/obj
