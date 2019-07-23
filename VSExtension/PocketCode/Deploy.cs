@@ -8,6 +8,10 @@ using Microsoft.VisualStudio.Shell.Interop;
 using Task = System.Threading.Tasks.Task;
 using EnvDTE;
 using System.Text;
+using System.IO;
+using System.Runtime.Serialization.Json;
+using System.Windows.Threading;
+using System.Runtime.CompilerServices;
 
 namespace PocketCode
 {
@@ -44,7 +48,6 @@ namespace PocketCode
             commandService = commandService ?? throw new ArgumentNullException(nameof(commandService));
 
             var menuCommandID = new CommandID(CommandSet, CommandId);
-            //var menuItem = new MenuCommand(this.Execute, menuCommandID);
             var menuItem = new MenuCommand(this.Execute, menuCommandID);
             commandService.AddCommand(menuItem);
         }
@@ -68,7 +71,8 @@ namespace PocketCode
                 return this.package;
             }
         }
-
+        public DTE dte;
+        public Dispatcher Dispatcher;
         /// <summary>
         /// Initializes the singleton instance of the command.
         /// </summary>
@@ -78,9 +82,16 @@ namespace PocketCode
             // Switch to the main thread - the call to AddCommand in PocketCode's constructor requires
             // the UI thread.
             await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync(package.DisposalToken);
-
+            
             OleMenuCommandService commandService = await package.GetServiceAsync(typeof(IMenuCommandService)) as OleMenuCommandService;
             Instance = new Deploy(package, commandService);
+
+            Instance.dte = (package.GetServiceAsync(typeof(_DTE)))?.Result as DTE;
+            Instance.Dispatcher = Dispatcher.CurrentDispatcher;
+            _ = Task.Run(() =>
+              {
+                  new Server().Run(Instance, package);
+              });
         }
 
         /// <summary>
@@ -93,7 +104,7 @@ namespace PocketCode
         private void Execute(object sender, EventArgs e)
         {
             ThreadHelper.ThrowIfNotOnUIThread();
-            //DTE dte1 = System.Runtime.InteropServices.Marshal.GetActiveObject();
+
             DTE dte = (this.ServiceProvider.GetServiceAsync(typeof(_DTE)))?.Result as DTE;
             Document activeDoc = dte?.ActiveDocument;
             TextDocument textDocument = (TextDocument)activeDoc?.Object("TextDocument");
@@ -129,13 +140,12 @@ namespace PocketCode
                     OLEMSGBUTTON.OLEMSGBUTTON_OK,
                     OLEMSGDEFBUTTON.OLEMSGDEFBUTTON_FIRST);
             }
-            string result = textDocument.StartPoint.CreateEditPoint().GetText(textDocument.EndPoint);
 
-            Task.Run(() =>
-            {
-                new Server().Run(result);
-            });
 
+            //SerializableFile sendFile = new SerializableFile(activeDoc);
+            //var ms = new MemoryStream();
+            //var ser = new DataContractJsonSerializer(typeof(SerializableFile));
+            //ser.WriteObject(ms, sendFile);
         }
     }
 }

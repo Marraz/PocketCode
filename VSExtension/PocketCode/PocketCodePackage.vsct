@@ -95,7 +95,6 @@
     <!-- This is the guid used to group the menu commands together -->
     <GuidSymbol name="guidPocketCodePackageCmdSet" value="{86b47887-c86c-4561-aaab-6030f407e2de}">
       <IDSymbol name="MyMenuGroup" value="0x1020" />
-      <!--<IDSymbol name="ToolbarButtonId" value ="0xDEAD"/> -->
       <IDSymbol name="PocketCodeId" value="0xBEEF" />
       <IDSymbol name="SolutionToolbarGroup" value="0x0190"/>
     </GuidSymbol>
