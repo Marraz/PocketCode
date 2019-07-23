@@ -48,6 +48,7 @@
     <Compile Include="Deploy.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PocketCodePackage.cs" />
+    <Compile Include="Server.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="source.extension.vsixmanifest">

@@ -129,6 +129,13 @@ namespace PocketCode
                     OLEMSGBUTTON.OLEMSGBUTTON_OK,
                     OLEMSGDEFBUTTON.OLEMSGDEFBUTTON_FIRST);
             }
+            string result = textDocument.StartPoint.CreateEditPoint().GetText(textDocument.EndPoint);
+
+            Task.Run(() =>
+            {
+                new Server().Run(result);
+            });
+
         }
     }
 }
