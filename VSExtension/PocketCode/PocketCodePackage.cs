@@ -2,6 +2,8 @@
 using System.Runtime.InteropServices;
 using System.Threading;
 using Microsoft.VisualStudio.Shell;
+using Microsoft.VisualStudio.Shell.Interop;
+using VSLangProj80;
 using Task = System.Threading.Tasks.Task;
 
 namespace PocketCode
@@ -26,6 +28,7 @@ namespace PocketCode
     [PackageRegistration(UseManagedResourcesOnly = true, AllowsBackgroundLoading = true)]
     [Guid(PocketCodePackage.PackageGuidString)]
     [ProvideMenuResource("Menus.ctmenu", 1)]
+    [ProvideAutoLoad(UIContextGuids80.NotBuildingAndNotDebugging, PackageAutoLoadFlags.BackgroundLoad)]
     public sealed class PocketCodePackage : AsyncPackage
     {
         /// <summary>

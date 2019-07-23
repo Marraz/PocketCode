@@ -71,8 +71,8 @@ namespace PocketCode
                 return this.package;
             }
         }
-        public DTE dte;
-        public Dispatcher Dispatcher;
+        internal DTE dte;
+        internal Dispatcher Dispatcher;
         /// <summary>
         /// Initializes the singleton instance of the command.
         /// </summary>
