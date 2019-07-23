@@ -87,6 +87,8 @@ namespace PocketCode
                 var ser = new DataContractJsonSerializer(typeof(SerializableFile));
                 ser.WriteObject(stream, sendFile);
             }
+            string line = "Exit" + "\n";
+            stream.Write(Encoding.ASCII.GetBytes(line), 0, Encoding.ASCII.GetByteCount(line));
         }
 
         private async void SetDTE(AsyncPackage package)
