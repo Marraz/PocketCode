@@ -43,25 +43,38 @@ namespace PocketCode
             listener.Start();
 
             //---incoming client connected---
-            TcpClient client = listener.AcceptTcpClient();
-            NetworkStream nwStream = client.GetStream();
-
-
+            TcpClient client;
+            NetworkStream nwStream;
+            //System.IO.IOException
             while (true)
             {
-                //---get the incoming data through a network stream---
-                byte[] buffer = new byte[client.ReceiveBufferSize];
-                //---read incoming stream---
-                int bytesRead = nwStream.Read(buffer, 0, client.ReceiveBufferSize);
-
-                //---convert the data received into a string---
-                string dataReceived = Encoding.ASCII.GetString(buffer, 0, bytesRead);
-
-                dep.Dispatcher.Invoke((Action)delegate ()
+                client = listener.AcceptTcpClient();
+                nwStream = client.GetStream();
+                while (true)
                 {
-                    Documents documents = this.Dte?.Documents ?? dep?.dte?.Documents;
-                    this.SendFilesText(documents, nwStream);
-                });
+                    try
+                    {
+                        //---get the incoming data through a network stream---
+                        byte[] buffer = new byte[client.ReceiveBufferSize];
+                        //---read incoming stream---
+                        int bytesRead = nwStream.Read(buffer, 0, client.ReceiveBufferSize);
+
+                        //---convert the data received into a string---
+                        string dataReceived = Encoding.ASCII.GetString(buffer, 0, bytesRead);
+
+                        dep.Dispatcher.Invoke((Action)delegate ()
+                        {
+                            Documents documents = this.Dte?.Documents ?? dep?.dte?.Documents;
+                            this.SendFilesText(documents, nwStream);
+                        });
+                    }
+                    catch (Exception e)
+                    {
+                        nwStream?.Dispose();
+                        client?.Dispose();
+                        break;
+                    }
+                }
             }
             client.Close();
             listener.Stop();
