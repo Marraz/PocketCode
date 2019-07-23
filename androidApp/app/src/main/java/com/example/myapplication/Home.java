@@ -78,12 +78,13 @@ public class Home extends AppCompatActivity {
                     while (mRun)
                     {
                         serverMessage = in.readLine();
-                        if (serverMessage == null ||  serverMessage.contains("Exit")) {
-                            //call the method messageReceived from MyActivity class
-                            return builder.toString();
-                        }
                         builder.append(serverMessage);
                         builder.append(System.getProperty("line.separator"));
+                        if (serverMessage == null ||  serverMessage.contains("Exit")) {
+                            //call the method messageReceived from MyActivity class
+
+                            return builder.toString();
+                        }
                         serverMessage = null;
                     }
                     Log.e("RESPONSE FROM SERVER", "S: Received Message: '" + serverMessage + "'");

@@ -12,14 +12,26 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.example.myapplication.ui.main.SectionsPagerAdapter;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 public class MainActivity extends AppCompatActivity {
     private String result;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        result = getIntent().getExtras().getString("result", "Failed to get data");
-        SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter(this, getSupportFragmentManager());
+        result = getIntent().getStringExtra("result");
+        JSONArray array = new JSONArray();
+        try {
+             array = new JSONArray(result);
+        }catch (JSONException e)
+        {
+        }
+
+        SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter(this, getSupportFragmentManager(), array);
         ViewPager viewPager = findViewById(R.id.view_pager);
         viewPager.setAdapter(sectionsPagerAdapter);
         TabLayout tabs = findViewById(R.id.tabs);
