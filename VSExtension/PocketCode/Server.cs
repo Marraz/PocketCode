@@ -64,8 +64,12 @@ namespace PocketCode
 
                         dep.Dispatcher.Invoke((Action)delegate ()
                         {
-                            Documents documents = this.Dte?.Documents ?? dep?.dte?.Documents;
-                            this.SendFilesText(documents, nwStream);
+                            try
+                            {
+                                Documents documents = this.Dte?.Documents ?? dep?.dte?.Documents;
+                                this.SendFilesText(documents, nwStream);
+                            }
+                            catch (Exception) { } //Lets just ignore everything for now
                         });
                     }
                     catch (Exception e)
